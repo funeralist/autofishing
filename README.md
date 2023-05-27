@@ -1,2 +1,10 @@
 # D2Autofishing
-Simple Python 3 script utilizing openCV to auto fish in Destiny 2 The Videogame by 3.4 billion company Bungo.
+Simple Python script utilizing openCV to autofish in **"Destiny 2: The Videogame by 3.4 billion company Bungo"**.
+
+Requirments:
+```
+pip install opencv-python
+pip install pyautogui
+pip install mss
+pip install keyboard
+```
