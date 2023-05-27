@@ -4,40 +4,40 @@ import pyautogui
 import time
 import numpy
 import keyboard
+import config
+
 
 def hold_e():
-    pyautogui.keyDown('e')
+    pyautogui.keyDown(config.interaction_key)
     time.sleep(0.6)
-    pyautogui.keyUp('e')
+    pyautogui.keyUp(config.interaction_key)
 
-def press_e():
-    pyautogui.keyDown('e')
-    time.sleep(0.03)
-    pyautogui.keyUp('e')
 
 image = None
 activity_state = False
-capture = {"top": 710, "left": 805, "width": 335, "height": 55}
+
+print('Macro launched!')
 
 with mss.mss() as sct:
     while True:
-        if keyboard.is_pressed('ctrl') and keyboard.is_pressed('shift') and keyboard.is_pressed('l'):
+        # check for the hotkey
+        if keyboard.is_pressed(config.hotkey):
             activity_state ^= True
+            print('Macro is ' + (not activity_state) * 'not ' + 'working!')
             time.sleep(0.7)
-            print('state changed to ' + str(activity_state))
 
+        # if hotkey was pressed
         if activity_state:
-            image = numpy.asarray(sct.grab(capture))
+            # get screenshot and convert to HSV color format
+            image = numpy.asarray(sct.grab(config.capture))
             hsv_image = cv.cvtColor(image, cv.COLOR_BGR2HSV)
 
-            lower_color = numpy.array([0, 0, 255])
-            upper_color = numpy.array([255, 0, 255])
-            mask = cv.inRange(hsv_image, lower_color, upper_color)
+            # get white pixels
+            lower_white = numpy.array([0, 0, 255])
+            upper_white = numpy.array([255, 0, 255])
+            mask = cv.inRange(hsv_image, lower_white, upper_white)
 
+            # check for white pixels
             has_color = numpy.sum(mask)
-
             if has_color > 0:
-                print('color detected')
                 hold_e()
-            else:
-                print('color NOT detected')
