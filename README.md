@@ -8,3 +8,7 @@ pip install pyautogui
 pip install mss
 pip install keyboard
 ```
+
+This shitty tool is made for the tightest screen bounds and 1920x1080 screen resolution.
+
+Also put brightness to lowest and window mode to "windowed fullsreen" just to be safe.
