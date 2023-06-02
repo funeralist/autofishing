@@ -1,48 +1,65 @@
-import cv2 as cv
-import mss
+import multiprocessing
 import pyautogui
-import time
-import numpy
 import keyboard
+import numpy
+import time
+import mss
+import cv2
+
 import config
 
 is_start_of_fishing = False
 image = None
-activity_state = False
+macro_state = False
 
 
-def hold_e():
+def hold_button():
     pyautogui.keyDown(config.interaction_key)
-    time.sleep(0.6)
+    time.sleep(config)
     pyautogui.keyUp(config.interaction_key)
+
+
+def hotkey_check():
+    global macro_state
     global is_start_of_fishing
-    is_start_of_fishing ^= True
 
-
-with mss.mss() as sct:
     while True:
-        # check for the hotkey
         if keyboard.is_pressed(config.hotkey):
-            activity_state ^= True
-            if activity_state:
+            macro_state ^= True
+            if macro_state:
                 is_start_of_fishing = True
-            print('Macro is ' + (not activity_state) * 'not ' + 'working.')
-            time.sleep(0.7)  # to prevent multi-toggling
+            print('Macro is ' + (not macro_state) * 'not ' + 'working.')
+            time.sleep(0.7)
 
-        # if activity_state is on True
-        if activity_state:
-            # get screenshot and convert to HSV color format
-            image = numpy.asarray(sct.grab(config.capture))
-            hsv_image = cv.cvtColor(image, cv.COLOR_BGR2HSV)
 
-            # get white pixels
-            lower_white = numpy.array([0, 0, 255])
-            upper_white = numpy.array([255, 0, 255])
-            mask = cv.inRange(hsv_image, lower_white, upper_white)
+def color_check():
+    global image
 
-            # check for white pixels
-            has_color = numpy.sum(mask)
-            if has_color > 0:
-                if not is_start_of_fishing:
-                    time.sleep(config.catch_delay)
-                hold_e()
+    with mss.mss() as sct:
+        while True:
+            if macro_state:
+                image = numpy.asarray(sct.grab(config.capture))
+                hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+                lower_white = numpy.array([0, 0, 255])
+                upper_white = numpy.array([255, 0, 255])
+                mask = cv2.inRange(hsv_image, lower_white, upper_white)
+
+                has_color = numpy.sum(mask)
+                if has_color > 0:
+                    if not is_start_of_fishing:
+                        time.sleep(config.catch_delay)
+                    hold_button()
+                    is_start_of_fishing ^= True
+
+
+def main():
+    hotkey_checker = multiprocessing.Process(name='hotkey_checker', target=hotkey_check)
+    color_checker = multiprocessing.Process(name='color_checker', target=color_check)
+    
+    color_checker.start()
+    hotkey_checker.start()
+
+
+if __name__ == "__main__":
+    main()
