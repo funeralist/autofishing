@@ -1,7 +1,7 @@
-# D2Autofishing
-Simple Python script utilizing openCV to autofish in **"Destiny 2: The Videogame by 3.4 billion dollar company Bungo"**.
+#D2Autofishing
+![image](https://github.com/2taken/D2Autofishing/blob/main/banner.png)
 
-Requirments:
+## Requirements
 ```
 pip install opencv-python
 pip install pyautogui
@@ -10,8 +10,6 @@ pip install keyboard
 pip install pywin32
 ```
 
-This shitty tool is made for the tightest screen bounds, 1920x1080 screen resolution (change either setting or capture dictionary in config) and Windows OS.
+## How it works:
+It takes some screenshots of area that is determined in config, masks out white color, sums the masked image, if sum is higher than 0 there is a text on the screen (it works because pure white color only appears as a text). If there is a text it holds interaction button determined in config. Also listens to toggle hotkey in separate process.
 
-If you need you can add delay before catching in config, since some people get empty hooks without it for some reason.
-
-Also put brightness to lowest and window mode to "windowed fullsreen" just to be safe.
