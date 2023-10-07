@@ -1,4 +1,4 @@
-![image](https://github.com/2taken/D2Autofishing/blob/main/banner.png)
+![image](https://github.com/2taken/autofishing/blob/main/banner.png)
 
 ## Requirements
 ```
