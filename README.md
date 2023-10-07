@@ -1,4 +1,3 @@
-# D2Autofishing
 ![image](https://github.com/2taken/D2Autofishing/blob/main/banner.png)
 
 ## Requirements
